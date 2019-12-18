@@ -8,7 +8,7 @@ var connection = mysql.createConnection({
 
     user: "root",
 
-    password: "",
+    password: "komatsuyun19",
 
     database: "bamazon_db"
 });
@@ -53,10 +53,31 @@ var productBuy = function () {
                         let costTotal = answers.numberofUnits * results[0].price;
                         let updateStockQuantity = results[0].stock_quantity - answers.numberofUnits;
 
-                        let query
+                        let query = connection.query(
+                            "UPDATE products SET? WHERE ?", [{
+                                stock_quantity: updateStockQuantity
+                            },
+                            {
+                                item_id: answers.productID
+                            }],
+                            function (error, results) {
+                                console.log("=================================================");
+                                console.log('\nSuccess!!!');
+                                console.log('The total cost of your purchase is: $' + costTotal);
+                                connection.end();
+                            }
+                        );
+                    } else if (answers.numberofUnits > results[0].stock_quantity) {
+                        console.log("=================================================");
+                        console.log('\nInsufficient stock!');
+                        console.log('Only' + results[0].stock_quantity + 'units available.');
+                        console.log('Please try again!\n');
+                        productBuy();
                     }
                 }
             })
         })
 }
+
+productsDisplay();
 
