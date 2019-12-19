@@ -17,9 +17,17 @@ var prompts = {
     productsIDPrompt: {
         type: "input",
         name: "productID",
+        message: "Please enter the product ID of the product you want to buy: "
+    },
+
+    numberofUnitsPrompt: {
+        type: "input",
+        name: "numberofUnits",
         message: "Please enter the number of the units you want to buy: "
     }
 }
+
+
 
 var productsDisplay = function () {
     console.log("=================================================");
@@ -41,7 +49,7 @@ var productBuy = function () {
     inquirer.prompt([prompts.productsIDPrompt, prompts.numberofUnitsPrompt])
         .then(function (answers) {
             let query = "SELECT item_id, stock_quantity, price FROM products WHERE ?";
-            connnection.query(query, {
+            connection.query(query, {
                 item_id: answers.productID
             }, function (error, results) {
                 if (results.length === 0) {
